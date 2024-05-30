@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Material Upload</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center">Upload School Material</h1>
+    <form id="uploadForm">
+      <div class="form-group">
+        <label for="material">Choose File</label>
+        <input type="file" class="form-control" id="material" name="material" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+    <div id="linkContainer" class="mt-3" style="display: none;">
+      <h3>Share this link:</h3>
+      <a id="fileLink" href="#" target="_blank"></a>
+    </div>
+  </div>
+  <script>
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData();
+      const fileInput = document.getElementById('material');
+      formData.append('material', fileInput.files[0]);
+
+      const response = await fetch('/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await response.json();
+      const linkContainer = document.getElementById('linkContainer');
+      const fileLink = document.getElementById('fileLink');
+      fileLink.href = data.fileUrl;
+      fileLink.textContent = data.fileUrl;
+      linkContainer.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
